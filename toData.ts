@@ -1,4 +1,4 @@
-const highSimple = (name: string) => name.replace(/(.*)(도|광역시|특별자치시|특별자치도)/, "$1").replace(/.(.)./, "$1")
+export const highSimple = (name: string) => name.replace(/(.*)(도|광역시|특별시|특별자치시|특별자치도)/, "$1").replace(/(.).(.)/, "$1$2")
 
 const locals = []
 for await (const dirEntry of Deno.readDir("./source")) {
@@ -8,7 +8,7 @@ for await (const dirEntry of Deno.readDir("./source")) {
         id: highSimple(high.DIST_NM),
         name: highSimple(high.DIST_NM),
         division: "high",
-        type: high.DIST_NM.replace(/(.*)(도|광역시|특별자치시|특별자치도)/, "$2"),
+        type: high.DIST_NM.replace(/(.*)(도|광역시|특별시|특별자치시|특별자치도)/, "$2"),
         homepageURL: high.HP_URL,
         assemblyURL: high.ASMBLY_URL,
     })
@@ -27,4 +27,4 @@ locals.forEach(local => {
     mappedLocals[local.id] = local
 })
 
-console.log(JSON.stringify(mappedLocals))
+// console.log(JSON.stringify(mappedLocals))
