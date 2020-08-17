@@ -1,4 +1,5 @@
-const puppeteer = require('puppeteer');
+const puppeteer = require('puppeteer')
+const urls = require("./urls.json");
 
 (async () => {
     const browser = await puppeteer.launch({
@@ -23,13 +24,18 @@ const puppeteer = require('puppeteer');
             document.querySelector(".r > a").click()
         })
         await page.waitForNavigation()
-        
-        console.log(page.url())
     }
 
-    await searchURL("http://www.gangneung.go.kr")
-
-    await page.screenshot({path: "example.png"})
-
-    await browser.close()
+    for await(url of urls.slice(2)) {
+        console.log(`Search start: ${url}`)
+        await searchURL(url)
+        await page.evaluate(() => {
+            function getElementByXpath(path) {
+                return document.evaluate(path, document, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue
+            }
+            getElementByXpath("//*[contains(text(), '다운') and not(contains(text(), '뷰어'))]").click()
+        })
+        await page.waitFor(5000)
+    }
+    
 })()
