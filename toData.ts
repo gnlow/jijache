@@ -27,4 +27,17 @@ locals.forEach(local => {
     mappedLocals[local.id] = local
 })
 
+await Deno.writeTextFile("./data.json", JSON.stringify(mappedLocals))
+await Deno.writeTextFile("./api/data.ts", `export default <{
+    [key: string]: {
+        id: string,
+        name: string,
+        division: "high" | "low",
+        type: string,
+        in?: string,
+        homepageURL: string,
+        assemblyURL: string,
+    }
+}> 
+${JSON.stringify(mappedLocals)}`)
 // console.log(JSON.stringify(mappedLocals))
